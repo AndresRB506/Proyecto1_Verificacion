@@ -4,8 +4,8 @@ import tb_defs_pkg::*;
 
 class md_rx_driver;
   virtual md_if vif;
-  rand int unsigned num_beats;   // cantidad de beats a emitir
-  rand bit inject_illegal;        // habilitar generación de beats ilegales
+  rand int unsigned num_beats;
+  rand bit inject_illegal;
 
   constraint c_legal_counts { num_beats inside {[1:10000]}; }
 
@@ -15,15 +15,12 @@ class md_rx_driver;
     this.inject_illegal = inject_illegal;
   endfunction
 
-  // Genera un beat (legal por defecto; ocasionalmente ilegal si está habilitado)
   function void gen_beat(output md_beat_t b);
     int unsigned sz, of;
     if (!inject_illegal || ($urandom_range(0,9) != 0)) begin
-      // Elegir tamaño en [1:BUS_BYTES] y offset en [0:BUS_BYTES-1] cumpliendo la regla
       do sz = $urandom_range(1, BUS_BYTES); while (sz==0);
       do of = $urandom_range(0, BUS_BYTES-1); while (((BUS_BYTES + of) % sz) != 0);
     end else begin
-      // Forzar combinación ilegal
       sz = $urandom_range(1, BUS_BYTES);
       of = (sz == 1) ? 1 : ($urandom_range(0, BUS_BYTES-1));
       if (((BUS_BYTES + of) % sz) == 0) of = (of+1)%BUS_BYTES;
@@ -34,7 +31,6 @@ class md_rx_driver;
     b.data   = $urandom();
   endfunction
 
-  // Emite 'num_beats' respetando el handshake (valid hasta ready)
   task run();
     md_beat_t beat;
     vif.rx_drv_cb.md_rx_valid <= 1'b0;

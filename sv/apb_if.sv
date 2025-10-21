@@ -1,7 +1,6 @@
 
 // apb_if.sv - Interfaz AMBA3 APB para el testbench
 interface apb_if(input logic pclk, input logic preset_n);
-  // Señales APB estándar
   logic        psel;
   logic        penable;
   logic        pwrite;
@@ -11,7 +10,6 @@ interface apb_if(input logic pclk, input logic preset_n);
   logic        pready;
   logic        pslverr;
 
-  // Clocking blocks para evitar carreras TB/DUT
   clocking drv_cb @(posedge pclk);
     output psel, penable, pwrite, paddr, pwdata;
     input  prdata, pready, pslverr;
@@ -21,7 +19,6 @@ interface apb_if(input logic pclk, input logic preset_n);
     input psel, penable, pwrite, paddr, pwdata, prdata, pready, pslverr;
   endclocking
 
-  // Tarea de reset lado TB
   task automatic reset_apb();
     drv_cb.psel    <= 1'b0;
     drv_cb.penable <= 1'b0;

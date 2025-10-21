@@ -1,1 +1,1 @@
-// tb_params.vh - Incluye de utilería (reservado para defines globales, actualmente vacío)
+// tb_params.vh - (reservado para defines globales)

@@ -3,15 +3,14 @@
 import tb_defs_pkg::*;
 
 class apb_monitor;
-  virtual apb_if vif;                     // interfaz APB
-  mailbox #(apb_txn_t) mon2scb;          // canal hacia el scoreboard
+  virtual apb_if vif;
+  mailbox #(apb_txn_t) mon2scb;
 
   function new(virtual apb_if vif, mailbox #(apb_txn_t) mon2scb);
     this.vif = vif;
     this.mon2scb = mon2scb;
   endfunction
 
-  // Captura transferencias completas (PSEL & PENABLE & PREADY)
   task run();
     apb_txn_t t;
     forever begin
@@ -20,7 +19,7 @@ class apb_monitor;
         t.addr = vif.mon_cb.paddr;
         t.wdata = vif.mon_cb.pwdata;
         t.cmd = (vif.mon_cb.pwrite) ? APB_WRITE : APB_READ;
-        t.wait_states = '0; // opcional: medir si se requiere
+        t.wait_states = '0;
         mon2scb.put(t);
       end
     end

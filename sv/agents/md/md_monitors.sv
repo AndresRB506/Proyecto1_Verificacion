@@ -3,15 +3,14 @@
 import tb_defs_pkg::*;
 
 class md_rx_monitor;
-  virtual md_if vif;                // interfaz MD compartida
-  mailbox #(md_beat_t) rx2scb;      // canal hacia el scoreboard
+  virtual md_if vif;
+  mailbox #(md_beat_t) rx2scb;
 
   function new(virtual md_if vif, mailbox #(md_beat_t) rx2scb);
     this.vif    = vif;
     this.rx2scb = rx2scb;
   endfunction
 
-  // Observa handshakes en RX y traduce a una transacción md_beat_t
   task run();
     md_beat_t t;
     forever begin
@@ -28,15 +27,14 @@ class md_rx_monitor;
 endclass
 
 class md_tx_monitor;
-  virtual md_if vif;                // interfaz MD compartida
-  mailbox #(md_beat_t) tx2scb;      // canal hacia el scoreboard
+  virtual md_if vif;
+  mailbox #(md_beat_t) tx2scb;
 
   function new(virtual md_if vif, mailbox #(md_beat_t) tx2scb);
     this.vif    = vif;
     this.tx2scb = tx2scb;
   endfunction
 
-  // Observa handshakes en TX y traduce a md_beat_t
   task run();
     md_beat_t t;
     forever begin
